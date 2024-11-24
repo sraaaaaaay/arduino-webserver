@@ -1,3 +1,7 @@
+/** 
+ * A basic web server which will gradually be extended
+ */
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
@@ -8,13 +12,20 @@
 const char *SSID = SSID;
 const char *PASSWORD = PASSWORD;
 
-// Create server, declare pins
+// Create server on port80, declare pin & status
 AsyncWebServer server(80);
 uint8_t LED_PIN = 2;
 bool LED_status = LOW;
 
-/// Compose basic HTML doc & return conditional button status
+
+/**
+ * Builds and returns a simple HTML page to be returned to a user
+ * 
+ * @param led1stat bool representing ESP32 LED status
+ * @return pointer to HTML String
+ */
 String SendHTML(uint8_t led1stat) {
+
   String ptr = "<!DOCTYPE html> <html>\n";
   ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
   ptr += "<title>LED Control</title>\n";
@@ -42,7 +53,9 @@ String SendHTML(uint8_t led1stat) {
   return ptr;
 }
 
-/// Begin serial, set up GPIO pin, connect to wifi, create handlers
+/**
+ * Sets up serial, pin mode, GET route handlers
+ */
 void setup() {
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
@@ -72,7 +85,9 @@ void setup() {
   Serial.println("HTTP server started");
 }
 
-// Repeatedly check LED status & switch on/off accordingly
+/**
+ * Handles wifi reconnection & delays
+ */
 void loop() {
   static unsigned long lastToggleTime = 0;
   unsigned long current = millis();
